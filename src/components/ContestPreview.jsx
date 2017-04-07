@@ -6,9 +6,11 @@ class ContestPreview extends React.Component {
 
     this.handleClick = this.handleClick.bind(this);
   }
+  
   handleClick ()  {
-    console.log(this.props.contest.contestName);
-  };
+    this.props.onClick(this.props.id);
+  }
+
   render() {
     return (
       <div className="link ContestPreview" onClick={this.handleClick}>
