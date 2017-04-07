@@ -6,7 +6,7 @@ const ContestList = ({ contests, onContestClick }) => (
     {contests.map(contest =>
       <ContestPreview 
         key={contest.id} 
-        contest={contest}
+        {...contest}
         onClick={onContestClick}/>
     )}
   </div>
