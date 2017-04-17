@@ -14,8 +14,16 @@ class App extends React.Component {
     this.fetchContest = this.fetchContest.bind(this);
   }
   
-  componentDidMount(){
+  onPopState = handler => {
+    window.onpopstate = handler;
+  }
 
+  componentDidMount(){
+    this.onPopState((event) => {
+      this.setState({
+        currentContestId: (event.state || {}).currentContestId
+      });
+    });
   }
   pageHeader(){
     if (this.state.currentContestId){
@@ -39,7 +47,7 @@ class App extends React.Component {
       });
     });
   };
-  
+
   fetchContestList = () => {
     pushState(
       {currentContestId: null}, 
