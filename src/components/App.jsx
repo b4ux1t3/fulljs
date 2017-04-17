@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header.jsx';
 import ContestList from './ContestList.jsx';
 import Contest from './COntest.jsx';
-
+import * as api from '../api.js';
 const pushState = (obj, url) =>
   window.history.pushState(obj, '', url);
 
@@ -26,20 +26,33 @@ class App extends React.Component {
       {currentContestId: contestId}, 
       `/contest/${contestId}`
     );
-    // lookup contest, change the state to be related to it.
-    this.setState({
-      headerMessage: this.state.contests[contestId].contestName,
-      currentContestId: contestId
+    api.fetchContest(contestId).then(contest => {
+      this.setState({
+        headerMessage: contest.contestName,
+        currentContestId: contest.id,
+        contests: {
+          ...this.state.contests,
+          [contest.id]: contest
+        }
+      });
     });
 
+    // lookup contest, change the state to be related to it.
+    
+
   }
+
+  currentContest() {
+    return this.state.contests[this.state.currentContestId];
+  }
+
   currentContent() {
     if (this.state.currentContestId){
-      return <Contest {...this.state.contests[this.state.currentContestId]}/>
+      return <Contest {...this.currentContest()}/>;
     } else {
       return <ContestList 
               contests={this.state.contests}
-              onContestClick={this.fetchContest} />
+              onContestClick={this.fetchContest} />;
     }
   }
   render() {
