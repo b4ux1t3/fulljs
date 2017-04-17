@@ -9,18 +9,21 @@ const pushState = (obj, url) =>
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      headerMessage: 'Everything is going as planned.',
-      contests: this.props.initialContests
-    };
+    this.state = this.props.initialData;
 
     this.fetchContest = this.fetchContest.bind(this);
   }
-
+  
   componentDidMount(){
 
   }
-
+  pageHeader(){
+    if (this.state.currentContestId){
+      return this.currentContest().contestName;
+    } else {
+      return 'Naming Contests';
+    }
+  }
   fetchContest(contestId) {
     pushState(
       {currentContestId: contestId}, 
@@ -28,7 +31,6 @@ class App extends React.Component {
     );
     api.fetchContest(contestId).then(contest => {
       this.setState({
-        headerMessage: contest.contestName,
         currentContestId: contest.id,
         contests: {
           ...this.state.contests,
@@ -36,10 +38,6 @@ class App extends React.Component {
         }
       });
     });
-
-    // lookup contest, change the state to be related to it.
-    
-
   }
 
   currentContest() {
@@ -58,11 +56,15 @@ class App extends React.Component {
   render() {
     return (
       <div className="App container-fluid">
-          <Header message={this.state.headerMessage} />
+          <Header message={this.pageHeader()} />
           {this.currentContent()}
       </div>
     );
   }
 }
+
+App.propTypes = {
+  initialData: React.PropTypes.object.isRequired
+};
 
 export default App;
